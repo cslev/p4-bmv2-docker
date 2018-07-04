@@ -2,9 +2,10 @@
 After a lot of hussle, I was finally able to run BMV2 (P4 behavioral-switch) in a container. For reproducibility and in order to drastically decrease , I have created the corresponding Dockerfile
 
 # Usage
-`$ git clone --recursive https://github.com/cslev/p4-bmv2-docker/`
-`$ cd p4-bmv2-docker`
-`$ sudo docker build -t <image_name> .`
+```$ git clone --recursive https://github.com/cslev/p4-bmv2-docker/
+$ cd p4-bmv2-docker
+$ sudo docker build -t <image_name> .
+```
 
 Then, your image is ready to use.
 
