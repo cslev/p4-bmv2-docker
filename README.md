@@ -1,5 +1,5 @@
 # P4 BMV2 docker container
-After a lot of hussle, I was finally able to run BMV2 (P4 behavioral-switch) in a container. For reproducibility and in order to drastically decrease , I have created the corresponding Dockerfile
+After a lot of hussle, I was finally able to run BMV2 (P4 behavioral-switch) in a container. For reproducibility and in order to drastically decrease the container's size, I have created the corresponding Dockerfile
 
 # Usage
 ```
