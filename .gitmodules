@@ -1,3 +1,6 @@
 [submodule "behavioral-model"]
 	path = behavioral-model
 	url = https://github.com/p4lang/behavioral-model
+[submodule "PI"]
+	path = PI
+	url = https://github.com/p4lang/PI/

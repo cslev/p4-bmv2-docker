@@ -1,0 +1,125 @@
+FROM ubuntu:16.04
+LABEL maintainer="cslev <cslev@gmx.com>"
+
+# update bashrc to make it fancier
+COPY bashrc_root /root/.bashrc
+
+# packages needed for compilation
+ENV DEV_DEPS automake \
+         build-essential \
+         clang \
+         curl \
+         g++-6 \
+         git \
+         libjudy-dev \
+         libgmp-dev \
+         libpcap-dev \
+         libboost-dev \
+         libboost-program-options-dev \
+         libboost-system-dev \
+         libboost-filesystem-dev \
+         libboost-thread-dev \
+         libtool \
+         pkg-config \
+	 libssl-dev \
+	 automake \
+	 autoconf \
+	 make \
+	 curl \
+	 unzip \
+ 	 ca-certificates \
+         libreadline-dev \
+	 libgflags-dev
+
+# packages needed for compilation and run
+ENV RUN_DEPS sudo \
+	 libboost-program-options1.58.0 \
+	 libboost-system1.58.0 \
+         libboost-filesystem1.58.0 \
+         libboost-thread1.58.0 \
+         libgmp10 libjudydebian1 \
+         libpcap0.8 \
+	 net-tools \
+	 python
+
+# protobuf
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends $DEV_DEPS $RUN_DEPS
+COPY protobuf /opt/protobuf/
+WORKDIR /opt/protobuf/
+RUN ./autogen.sh && \
+    ./configure && \
+    make -j2 && \
+    make install  && \
+    ldconfig && \
+    rm -rf /opt/protobuf && \
+    echo "PROTOBUF installed"
+
+
+#grpc - too many submodules and tag based checkout would cause failure
+WORKDIR /opt/
+RUN git clone https://github.com/google/grpc.git
+WORKDIR /opt/grpc/
+RUN git checkout tags/v1.3.2 && \
+    git submodule update --init --recursive
+
+RUN make -j2 && \
+    make grpc_cli && \
+    make install && \
+    ldconfig && \
+    cp /opt/grpc/bins/opt/grpc_cli /usr/bin/ && \
+    ldconfig && \
+    rm -rf /opt/grpc && \
+    echo "GRPC installed"
+
+#PI
+WORKDIR /opt/
+#RUN git clone https://github.com/p4lang/PI/
+RUN git clone https://github.com/p4lang/PI/
+WORKDIR /opt/PI/
+RUN git submodule update --init --recursive
+RUN ./autogen.sh && \
+    ./configure --with-proto --without-internal-rpc  && \
+    make -j2 && \
+    make install && \
+    ldconfig && \
+    echo "PI installed"
+
+
+
+WORKDIR /
+#RUN git clone https://github.com/p4lang/behavioral-model
+COPY behavioral-model /opt/behavioral-model/
+# we reinstall $RUN_DEPS in case of apt-get autoremove --purge removed them
+WORKDIR /opt/behavioral-model/
+RUN ./install_deps.sh && \
+    ./autogen.sh && \
+    ./configure --with-pdfixed --with-pi && \
+    make -j2 && make install && ldconfig && \
+    cd targets/simple_switch_grpc/ && \
+    ./autogen.sh && \
+    ./configure && \
+    make && \
+    make install && \
+    ldconfig && \
+    echo "Behavioral-model installed"
+
+#rebuild PI with bmv2 capabilities now, as bmv2 headers are installed
+WORKDIR /opt/PI/
+RUN ./configure --with-proto --without-internal-rpc --with-bmv2 && \
+    make -j2 && make install && ldconfig && \
+    echo "PI reinstalled"
+WORKDIR /
+RUN apt-get purge -y $DEV_DEPS && \
+    apt-get autoremove --purge -y && \
+    apt-get install -y --no-install-recommends $RUN_DEPS && \
+    cd .. && \
+    rm -rf /var/cache/apt/* \
+	   /var/lib/apt/lists/ \
+ 	   /var/cache/debconf/* \
+	   /var/lib/dpkg/*-old \
+	   /var/log/apt/* \
+	   /opt/behavioral-model/ \
+    	   /opt/PI && \
+    echo "p4-bmv2 image ready"
+
