@@ -42,6 +42,9 @@ ENV RUN_DEPS sudo \
 	 net-tools \
 	 python
 
+#expose grpc port
+EXPOSE 50051/tcp
+
 # protobuf
 RUN apt-get update && \
     apt-get install -y --no-install-recommends $DEV_DEPS $RUN_DEPS

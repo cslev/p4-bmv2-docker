@@ -31,6 +31,9 @@ ENV RUN_DEPS sudo \
 	 scapy \
  	 tcpdump
 
+#expose thrift port
+EXPOSE 9090/tcp
+
 COPY behavioral-model /behavioral-model
 # update bashrc to make it fancier
 COPY bashrc_root /root/.bashrc
