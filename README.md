@@ -15,7 +15,9 @@ $ sudo docker build -t <image_name> .
 ```
 $ sudo docker build -t <image_name> -f Dockerfile.p4runtime .
 ```
-
+# Notes
+Both Dockerfile exposes **only** one respective port, e.g., pure bmv2 exposes 9090, and bmv2-p4runtime exposes 50051, respectively.
+In order to add more control ports to your container just define them via `docker run --expose=PORTNUM` argument.
 
 
 Then, your image is ready to use.
