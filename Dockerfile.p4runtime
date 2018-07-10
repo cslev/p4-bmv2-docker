@@ -60,6 +60,7 @@ RUN ./autogen.sh && \
 
 
 #grpc - too many submodules and tag based checkout would cause failure
+#so instead of copying a downloaded version of grpc, we start it from scratch
 WORKDIR /opt/
 RUN git clone https://github.com/google/grpc.git
 WORKDIR /opt/grpc/
@@ -77,7 +78,6 @@ RUN make -j2 && \
 
 #PI
 WORKDIR /opt/
-#RUN git clone https://github.com/p4lang/PI/
 RUN git clone https://github.com/p4lang/PI/
 WORKDIR /opt/PI/
 RUN git submodule update --init --recursive
@@ -91,7 +91,6 @@ RUN ./autogen.sh && \
 
 
 WORKDIR /
-#RUN git clone https://github.com/p4lang/behavioral-model
 COPY behavioral-model /opt/behavioral-model/
 # we reinstall $RUN_DEPS in case of apt-get autoremove --purge removed them
 WORKDIR /opt/behavioral-model/
