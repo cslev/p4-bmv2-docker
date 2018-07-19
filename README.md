@@ -7,6 +7,8 @@ $ git clone --recursive https://github.com/cslev/p4-bmv2-docker/
 $ cd p4-bmv2-docker
 ```
 # Usage
+Note the dot (`.`) at the end of the commands!
+
 ## pure bmv2 container 
 ```
 $ sudo docker build -t <image_name> .
