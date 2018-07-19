@@ -11,7 +11,18 @@ $ cd p4-bmv2-docker
 ```
 $ sudo docker build -t <image_name> .
 ```
-## bmv2 + P4runtime capability
+## bmv2 + P4runtime capability only
+This image has been built accordint to the instructions of [https://github.com/p4lang/behavioral-model/tree/master/targets/simple_switch_grpc](https://github.com/p4lang/behavioral-model/tree/master/targets/simple_switch_grpc).
+This container contains the P4runtime capable `simple_switch_grpc` and **all P4Runtime related libraries but nothing more**. 
+For a full-fledged combination check the next section.
+```
+$ sudo docker build -t <image_name> -f Dockerfile.p4runtime_pure .
+```
+
+
+## bmv2 + P4runtime capability [DEPRECATED]
+This image might contain too much packages (e.g., `nanomsg`, `thrift`, `simple_switch`, `simple_switch_grpc`). 
+Check `Dockerfile.p4runtime` to see whether you need all of these stuffs
 ```
 $ sudo docker build -t <image_name> -f Dockerfile.p4runtime .
 ```
