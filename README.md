@@ -13,7 +13,7 @@ Note the dot (`.`) at the end of the commands!
 ```
 $ sudo docker build -t <image_name> .
 ```
-Or alternatively, pull image from [Docker hub](https://hub.docker.com/r/cslev/p4-bmv2/).
+Or alternatively, pull image from [Docker hub](https://hub.docker.com/r/cslev/p4-bmv2/) (compressed images size 409 MB).
 
 ## bmv2 + P4runtime capability only
 This image has been built accordint to the instructions of [https://github.com/p4lang/behavioral-model/tree/master/targets/simple_switch_grpc](https://github.com/p4lang/behavioral-model/tree/master/targets/simple_switch_grpc).
@@ -24,7 +24,7 @@ $ sudo docker build -t <image_name> -f Dockerfile.p4runtime_pure .
 ```
 
 Or alternatively, pull image from [Docker hub](https://hub.docker.com/r/cslev/p4-bmv2-p4runtime/).
-During pull, pay attention to the tags, and use tag `pure`.
+During pull, pay attention to the tags, and use tag `pure` (compressed image size: 2GB).
 
 
 ## bmv2 + P4runtime capability [DEPRECATED]
@@ -39,7 +39,7 @@ In order to add more control ports to your container just define them via `docke
 Then, your image is ready to use.
 
 Or alternatively, pull image from [Docker hub](https://hub.docker.com/r/cslev/p4-bmv2-p4runtime/).
-During pull, pay attention to the tags, and use tag `latest` or `full` or something, which is not `pure`.
+During pull, pay attention to the tags, and use tag `latest` or `full` or something, which is not `pure` (compressed images size 2GB).
 
 
 ## You want to add veth to your container?
