@@ -33,13 +33,14 @@ Check `Dockerfile.p4runtime` to see whether you need all of these stuffs
 ```
 $ sudo docker build -t <image_name> -f Dockerfile.p4runtime .
 ```
+Or alternatively, pull image from [Docker hub](https://hub.docker.com/r/cslev/p4-bmv2-p4runtime/).
+During pull, pay attention to the tags, and use tag `full` (compressed image size: 2GB).
+
 # Notes
 All Dockerfiles exposes **only** one respective port, e.g., pure bmv2 exposes 9090, and bmv2-p4runtime images exposes 50051, respectively.
 In order to add more control ports to your container just define them via `docker run --expose=PORTNUM` argument.
 Then, your image is ready to use.
 
-Or alternatively, pull image from [Docker hub](https://hub.docker.com/r/cslev/p4-bmv2-p4runtime/).
-During pull, pay attention to the tags, and use tag `latest` or `full` or something, which is not `pure` (compressed images size 2GB).
 
 
 ## You want to add veth to your container?
