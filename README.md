@@ -26,8 +26,18 @@ $ sudo docker build -t <image_name> -f Dockerfile.p4runtime_pure .
 Or alternatively, pull image from [Docker hub](https://hub.docker.com/r/cslev/p4-bmv2-p4runtime/).
 During pull, pay attention to the tags, and use tag `pure` (compressed image size: 2GB).
 
+## p4c - development environment 
+This image has all ingredients for compiling p4 codes with P4Runtime support for software switch and psa architecture.
+Bear in mind that compilation of a P4 code with P4Runtime support can be done as follows:
+`p4c-bm2-ss <path to p4 file> --p4runtime-file <path to p4runtime file output> --p4runtime-format text -o <path to JSON output>
 
-## bmv2 + P4runtime capability [DEPRECATED]
+```
+sudo docker build -t <image_name> -f Dockerfile.p4c .
+```
+Or alternatively, pull image from [Docker hub](https://hub.docker.com/r/cslev/p4c/) (compressed image size: 1.8GB).
+
+
+## bmv2 + FULL P4runtime capability [DEPRECATED]
 This image might contain too much packages (e.g., `nanomsg`, `thrift`, `simple_switch`, `simple_switch_grpc`). 
 Check `Dockerfile.p4runtime` to see whether you need all of these stuffs
 ```
