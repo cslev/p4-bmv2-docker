@@ -36,7 +36,7 @@ EXPOSE 9090/tcp
 
 COPY behavioral-model /behavioral-model
 # update bashrc to make it fancier
-COPY bashrc_root /root/.bashrc
+COPY bashrc_root.bmv2 /root/.bashrc
 WORKDIR /behavioral-model
 # we reinstall $RUN_DEPS in case of apt-get autoremove --purge removed them
 RUN apt-get update && \

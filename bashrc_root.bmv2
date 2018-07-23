@@ -1,0 +1,36 @@
+# ~/.bashrc: executed by bash(1) for non-login shells.
+
+# Note: PS1 and umask are already set in /etc/profile. You should not
+# need this unless you want different defaults for root.
+# PS1='${debian_chroot:+($debian_chroot)}\h:\w\$ '
+# umask 022
+
+# You may uncomment the following lines if you want `ls' to be colorized:
+# export LS_OPTIONS='--color=auto'
+# eval "`dircolors`"
+# alias ls='ls $LS_OPTIONS'
+# alias ll='ls $LS_OPTIONS -l'
+# alias l='ls $LS_OPTIONS -lA'
+#
+# Some more alias to avoid making mistakes:
+# alias rm='rm -i'
+# alias cp='cp -i'
+# alias mv='mv -i'
+
+alias agi='apt-get install'
+alias agu='apt-get update'
+alias agdu='apt-get dist-upgrade'
+alias agr='apt-get remove'
+alias agar='apt-get autoremove'
+alias acs='apt-cache search'
+
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+
+case $TERM in
+        xterm*|rxvt|Eterm|eterm|cygwin)
+PS1='\[\033[34m\][docker]\[\033[39;1m\][P4-SWITCH:bmv2only] ${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u \[\033[00m\]\[\033[01;31m\]\w\$\[\033[00m\] '
+
+        ;;
+esac
+

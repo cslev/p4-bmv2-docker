@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 LABEL maintainer="cslev <cslev@gmx.com>"
 
 # update bashrc to make it fancier
-COPY bashrc_root.p4runtime.full /root/.bashrc
+COPY bashrc_root /root/.bashrc
 
 # packages needed for compilation
 ENV DEV_DEPS automake \
@@ -29,7 +29,8 @@ ENV DEV_DEPS automake \
 	 unzip \
  	 ca-certificates \
          libreadline-dev \
-	 libgflags-dev
+	 libgflags-dev \
+	 libnanomsg-dev
 
 # packages needed for compilation and run
 ENV RUN_DEPS sudo \
@@ -40,7 +41,8 @@ ENV RUN_DEPS sudo \
          libgmp10 libjudydebian1 \
          libpcap0.8 \
 	 net-tools \
-	 python
+	 python \
+         libnanomsg0
 
 #expose grpc port
 EXPOSE 50051/tcp
@@ -68,10 +70,8 @@ RUN git checkout tags/v1.3.2 && \
     git submodule update --init --recursive
 
 RUN make -j2 && \
-    make grpc_cli && \
     make install && \
     ldconfig && \
-    cp /opt/grpc/bins/opt/grpc_cli /usr/bin/ && \
     ldconfig && \
     rm -rf /opt/grpc && \
     echo "GRPC installed"
@@ -82,7 +82,7 @@ RUN git clone https://github.com/p4lang/PI/
 WORKDIR /opt/PI/
 RUN git submodule update --init --recursive
 RUN ./autogen.sh && \
-    ./configure --with-proto --without-internal-rpc  && \
+    ./configure --with-proto --without-internal-rpc --without-cli --without-bmv2 && \
     make -j2 && \
     make install && \
     ldconfig && \
@@ -94,9 +94,8 @@ WORKDIR /
 COPY behavioral-model /opt/behavioral-model/
 # we reinstall $RUN_DEPS in case of apt-get autoremove --purge removed them
 WORKDIR /opt/behavioral-model/
-RUN ./install_deps.sh && \
-    ./autogen.sh && \
-    ./configure --with-pdfixed --with-pi && \
+RUN ./autogen.sh && \
+    ./configure --with-pi --without-thrift --without-nanomsg && \
     make -j2 && make install && ldconfig && \
     cd targets/simple_switch_grpc/ && \
     ./autogen.sh && \
@@ -106,11 +105,6 @@ RUN ./install_deps.sh && \
     ldconfig && \
     echo "Behavioral-model installed"
 
-#rebuild PI with bmv2 capabilities now, as bmv2 headers are installed
-WORKDIR /opt/PI/
-RUN ./configure --with-proto --without-internal-rpc --with-bmv2 && \
-    make -j2 && make install && ldconfig && \
-    echo "PI reinstalled"
 WORKDIR /
 RUN apt-get purge -y $DEV_DEPS && \
     apt-get autoremove --purge -y && \
@@ -123,5 +117,5 @@ RUN apt-get purge -y $DEV_DEPS && \
 	   /var/log/apt/* \
 	   /opt/behavioral-model/ \
     	   /opt/PI && \
-    echo "p4-bmv2 image ready"
+    echo "p4-bmv2-p4runtime-pure image ready"
 

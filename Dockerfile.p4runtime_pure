@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 LABEL maintainer="cslev <cslev@gmx.com>"
 
 # update bashrc to make it fancier
-COPY bashrc_root /root/.bashrc
+COPY bashrc_root.p4runtime.pure /root/.bashrc
 
 # packages needed for compilation
 ENV DEV_DEPS automake \
@@ -29,7 +29,8 @@ ENV DEV_DEPS automake \
 	 unzip \
  	 ca-certificates \
          libreadline-dev \
-	 libgflags-dev
+	 libgflags-dev \
+	 libnanomsg-dev
 
 # packages needed for compilation and run
 ENV RUN_DEPS sudo \
