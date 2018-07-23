@@ -27,9 +27,9 @@ Or alternatively, pull image from [Docker hub](https://hub.docker.com/r/cslev/p4
 During pull, pay attention to the tags, and use tag `pure` (compressed image size: 2GB).
 
 ## p4c - development environment 
-This image has all ingredients for compiling p4 codes with P4Runtime support for software switch and psa architecture.
-Bear in mind that compilation of a P4 code with P4Runtime support can be done as follows:
-`p4c-bm2-ss <path to p4 file> --p4runtime-file <path to p4runtime file output> --p4runtime-format text -o <path to JSON output>
+This image has all ingredients for compiling p4 codes with P4Runtime support for software switch (-ss) and PSA (-psa) architecture.
+Bear in mind that compilation of a P4 code with P4Runtime support to software switch target can be done as follows:
+`p4c-bm2-ss <path to p4 file> --p4runtime-file <path to p4runtime file output> --p4runtime-format text -o <path to JSON output>`
 
 ```
 sudo docker build -t <image_name> -f Dockerfile.p4c .
