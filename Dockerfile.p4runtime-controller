@@ -2,14 +2,17 @@ FROM ubuntu:16.04
 LABEL maintainer="cslev <cslev@gmx.com>"
 
 # update bashrc to make it fancier
-COPY bashrc_root.p4c /root/.bashrc
+COPY bashrc_root.p4runtime-controller /root/.bashrc
 
 # packages needed for compilation
 ENV DEV_DEPS automake \
+     build-essential \
      clang \
      curl \
+     g++-6 \
      git \
      libjudy-dev \
+     libgmp-dev \
      libpcap-dev \
      libboost-dev \
      libboost-program-options-dev \
@@ -17,60 +20,48 @@ ENV DEV_DEPS automake \
      libboost-filesystem-dev \
      libboost-thread-dev \
      libboost-iostreams-dev \
-     libboost-graph-dev \
      libtool \
      pkg-config \
 	 libssl-dev \
 	 automake \
 	 autoconf \
+	 make \
 	 curl \
 	 unzip \
  	 ca-certificates \
      libreadline-dev \
 	 libgflags-dev \
-     bison \
-     flex \
-     libfl-dev \
-     cmake \
-     python-setuptools \
-     python-pip \
-     libpython2.7-dev \
-     libevent-dev
+	 libnanomsg-dev \
+     cython \
+         python-setuptools \
+         python-pip \
+         libpython2.7-dev \
+         libevent-dev
+
+
 
 # packages needed for compilation and run
 ENV RUN_DEPS sudo \
-         build-essential \
-	 make \
-         g++-6 \
-         libgc-dev \
-         libgmp-dev \
-	 libboost-program-options1.58.0 \
-	 libboost-system1.58.0 \
-         libboost-filesystem1.58.0 \
-         libboost-thread1.58.0 \
-         libboost-iostreams1.58.0 \
-         libgmp10 \
-         libjudydebian1 \
-	 nano \
-         libpcap0.8 \
-	 net-tools \
-	 python \
-         python-scapy \
-         python-ipaddr \
-         tcpdump
+    libboost-program-options1.58.0 \
+    libboost-system1.58.0 \
+    libboost-filesystem1.58.0 \
+    libboost-thread1.58.0 \
+    libboost-iostreams1.58.0 \
+    libgmp10 libjudydebian1 \
+    libpcap0.8 \
+    net-tools \
+    python \
+    python-pip \
+    python-dev \
+    python-distlib \
+    python-distutils-extra \
+    python-setuptools \
+    nano
 
-# protobuf
+
 RUN apt-get update && \
     apt-get install -y --no-install-recommends $DEV_DEPS $RUN_DEPS
-COPY protobuf /opt/protobuf/
-WORKDIR /opt/protobuf/
-RUN ./autogen.sh && \
-    ./configure && \
-    make -j2 && \
-    make install  && \
-    ldconfig && \
-    rm -rf /opt/protobuf && \
-    echo "PROTOBUF installed"
+    
 
 
 #grpc - too many submodules and tag based checkout would cause failure
@@ -81,10 +72,30 @@ WORKDIR /opt/grpc/
 RUN git checkout tags/v1.3.2 && \
     git submodule update --init --recursive
 
+#protobuf is inside the third_party directory
+WORKDIR /opt/grpc/third_party/protobuf
+RUN ./autogen.sh && \
+    ./configure && \
+    make -j2 && \
+    make install  && \
+    ldconfig
+#install protobuf python packages
+WORKDIR /opt/grpc/third_party/protobuf/python
+RUN python -m pip install --upgrade pip && \
+    python setup.py install && \
+    ldconfig
+
+WORKDIR /opt/grpc/
 RUN make -j2 && \
+    make grpc_cli && \
     make install && \
     ldconfig && \
+    cp bins/opt/* /usr/bin/ 
+
+RUN python -m pip install --upgrade pip && \
+    python setup.py install && \
     echo "GRPC installed"
+
 
 #PI
 WORKDIR /opt/
@@ -92,35 +103,23 @@ RUN git clone https://github.com/p4lang/PI/
 WORKDIR /opt/PI/
 RUN git submodule update --init --recursive
 RUN ./autogen.sh && \
-    ./configure --with-proto --with-fe-cpp --without-internal-rpc --without-cli  && \
+    ./configure --with-proto --without-internal-rpc --with-cli --without-bmv2 --with-fe-cpp && \
     make -j2 && \
     make install && \
     ldconfig && \
     echo "PI installed"
 
 
-#P4C
-WORKDIR /opt/
-RUN git clone --recursive https://github.com/p4lang/p4c.git
-WORKDIR /opt/p4c/
-RUN mkdir build && \
-    cd build && \
-    cmake .. && \
-    make -j2 && \
-    make install && \
-    ldconfig
 WORKDIR /
 RUN apt-get purge -y $DEV_DEPS && \
     apt-get autoremove --purge -y && \
     apt-get install -y --no-install-recommends $RUN_DEPS && \
+    cd .. && \
     rm -rf /var/cache/apt/* \
 	   /var/lib/apt/lists/ \
  	   /var/cache/debconf/* \
 	   /var/lib/dpkg/*-old \
 	   /var/log/apt/* \
-	   /opt/grpc/ \
-           /opt/protobuf \
-	   /opt/p4c \
-    	   /opt/PI && \
-    echo "p4c image ready"
+   	   /opt/PI && \
+    echo "p4-bmv2-p4runtime-pure image ready"
 

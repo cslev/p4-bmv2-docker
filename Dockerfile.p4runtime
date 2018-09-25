@@ -29,7 +29,11 @@ ENV DEV_DEPS automake \
 	 unzip \
  	 ca-certificates \
          libreadline-dev \
-	 libgflags-dev
+	 libgflags-dev \
+         python-setuptools \
+         python-pip \
+         libpython2.7-dev \
+         libevent-dev
 
 # packages needed for compilation and run
 ENV RUN_DEPS sudo \

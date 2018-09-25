@@ -17,14 +17,19 @@ ENV DEV_DEPS automake \
          libboost-thread-dev \
          libtool \
          pkg-config \
-	 libssl-dev
+	 libssl-dev \
+         python-setuptools \
+         python-pip \
+         libpython2.7-dev \
+         libevent-dev
 # packages needed for compilation and run
 ENV RUN_DEPS sudo \
 	 libboost-program-options1.58.0 \
 	 libboost-system1.58.0 \
          libboost-filesystem1.58.0 \
          libboost-thread1.58.0 \
-         libgmp10 libjudydebian1 \
+         libgmp10 \
+         libjudydebian1 \
          libpcap0.8 \
 	 net-tools \
 	 python \
